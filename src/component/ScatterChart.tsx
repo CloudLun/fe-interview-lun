@@ -7,13 +7,13 @@ type PolygonData = {
     label: string;
     NumberCellsContain: number;
     isVisible: boolean;
-    dashArray: string; // 新增: 虛線樣式
+    dashArray: string;
 };
 
 const ScatterChart = () => {
-    const LOCAL_STORAGE_KEY = "scatterChartPolygons";
-    const savedPolygons = localStorage.getItem(LOCAL_STORAGE_KEY);
-    const [polygons, setPolygons] = useState<PolygonData[]>(savedPolygons!.length > 0 ? JSON.parse(savedPolygons!) : []);
+    // const LOCAL_STORAGE_KEY = "scatterChartPolygons";
+    // const savedPolygons = localStorage.getItem(LOCAL_STORAGE_KEY);savedPolygons!.length > 0 ? JSON.parse(savedPolygons!) : 
+    const [polygons, setPolygons] = useState<PolygonData[]>([]);
     const [totalCells, setTotalCells] = useState<number>(0)
     const [isSelectingArea, setIsSelectingArea] = useState(false)
     const [polygonColor, setPolygonColor] = useState("#007bff");
@@ -46,6 +46,8 @@ const ScatterChart = () => {
 
             setTotalCells(data.length)
 
+
+
             const { width, height } = svgRef.current!.getBoundingClientRect();
             const innerWidth = width - margin.left - margin.right;
             const innerHeight = height - margin.top - margin.bottom;
@@ -55,6 +57,8 @@ const ScatterChart = () => {
 
             // d3.select(svgRef.current).selectAll("*").remove();
             const svg = d3.select(svgRef.current)
+
+            
 
 
             const chart = svg.select("#chart").attr("transform", `translate(${margin.left},${margin.top})`);
@@ -152,12 +156,12 @@ const ScatterChart = () => {
                             label: `Polygon ${polygons.length + 1}`,
                             NumberCellsContain: cellsInPolygon.length,
                             isVisible: true,
-                            dashArray: "none"
+                            dashArray: "none",
                         };
 
 
                         setPolygons((prev) => [...prev, newPolygon]);
-                        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify([...polygons, newPolygon]));
+                        // localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify([...polygons, newPolygon]));
                         clickedPoints = [];
                         linePath.attr("d", null);
                         return;
@@ -199,12 +203,32 @@ const ScatterChart = () => {
 
     const toggleisAreaSelect = () => setIsSelectingArea(!isSelectingArea)
 
+    const handleReorderPolygon = (index: number, direction: "up" | "down") => {
+        const updatedPolygons = [...polygons];
+
+        console.log(updatedPolygons)
+    
+        // 判斷目標索引是否可移動
+        if (direction === "down" && index > 0) {
+            // 與上方多邊形交換
+            [updatedPolygons[index], updatedPolygons[index - 1]] = 
+                [updatedPolygons[index - 1], updatedPolygons[index]];
+        } else if (direction === "up" && index < updatedPolygons.length - 1) {
+            // 與下方多邊形交換
+            [updatedPolygons[index], updatedPolygons[index + 1]] = 
+                [updatedPolygons[index + 1], updatedPolygons[index]];
+        }
+    
+        setPolygons(updatedPolygons);
+        // localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedPolygons)); // 更新 localStorage
+    };
+
 
     return (
         <div className="flex items-start gap-8 w-full h-full">
             <svg
                 ref={svgRef}
-                className="w-[70%] h-[50%]">
+                className="w-[70%] h-[80%]">
                 <g id="chart"></g>
                 <g id="polygons">
                     {polygons.map((polygon, index) => {
@@ -238,7 +262,7 @@ const ScatterChart = () => {
                     })}
                 </g>
             </svg>
-            <div className="flex flex-col w-[20%] h-[50%]" id="polygon-controls">
+            <div className="flex flex-col w-[20%] h-[80%] overflow-y-scroll" id="polygon-controls">
                 <h2 className="font-bold text-[1.25rem] ">Arbitrary Polygon Info</h2>
                 <div className="flex flex-col justify-center  gap-2 mt-4 mb-2">
                     <div className={`w-[50%] bg-white hover:bg-[#edeef2] font-semibold text-[1rem] text-center border-2 rounded-lg cursor-pointer`} onClick={toggleisAreaSelect}>{isSelectingArea ? "Stop" : "Start"}</div>
@@ -256,9 +280,9 @@ const ScatterChart = () => {
                     />
                 </div>
                 <h3 className="text-[0.75rem] mb-2">選取完多邊形後，以下會出現範圍內細胞資料</h3>
-                <div className="flex-1 flex flex-col gap-4 overflow-y-auto">
+                <div className=" flex flex-col gap-4 ">
                     {polygons.map((polygon, index) => (
-                        <div key={index} className="px-4 py-2 border-2 rounded-[20px]" id="polygon-control">
+                        <div key={index} className={`px-4 py-2 border-2 rounded-[20px]`} style={{ order: polygons.length - index }} id="polygon-control">
                             <div className="flex justify-between items-center mb-3">
                                 <div>
                                     <input
@@ -317,9 +341,24 @@ const ScatterChart = () => {
                                     </div>
                                     <div className="text-[0.75rem]">隱藏</div>
                                 </div>
+                                <div className="flex items-center gap-2">
+                                    <h3 className="text-[0.75rem]">層級順序</h3>
+                                    <button
+                                        onClick={() => handleReorderPolygon(index, "up")}
+                                        className="px-1 py-1 text-[0.7rem] bg-gray-200 rounded"
+                                    >
+                                        + 上移
+                                    </button>
+                                    <h3 className="text-[0.75rem]">{polygons.length - index}</h3>
+                                    <button
+                                        onClick={() => handleReorderPolygon(index, "down")}
+                                        className="px-1 py-1 text-[0.7rem] bg-gray-200 rounded"
+                                    >
+                                        - 下移
+                                    </button>
+                                </div>
                             </div>
                         </div>
-
                     ))}
                 </div>
             </div>
