@@ -9,14 +9,11 @@ type PolygonData = {
     isVisible: boolean
 };
 
-type Props = {
-    defaultColor: string;
-};
-
-const ScatterChart = ({ defaultColor }: Props) => {
+const ScatterChart = () => {
     const [polygons, setPolygons] = useState<PolygonData[]>([]);
     const [totalCells, setTotalCells] = useState<number>(0)
     const [isSelectingArea, setIsSelectingArea] = useState(false)
+    const [color, setColor] = useState("#007bff");
     const svgRef = useRef<SVGSVGElement>(null);
 
     const margin = { top: 20, right: 20, bottom: 50, left: 50 };
@@ -112,13 +109,13 @@ const ScatterChart = ({ defaultColor }: Props) => {
             const linePath = chart
                 .append("path")
                 .attr("fill", "none")
-                .attr("stroke", defaultColor)
+                .attr("stroke", color)
                 .attr("stroke-width", 2);
 
 
 
             svg.on("click", function (event) {
-                if(!isSelectingArea) return 
+                if (!isSelectingArea) return
 
                 const [x, y] = d3.pointer(event, svgRef.current);
                 const adjustedX = x - margin.left;
@@ -144,7 +141,7 @@ const ScatterChart = ({ defaultColor }: Props) => {
 
                         const newPolygon = {
                             points: [...clickedPoints],
-                            color: defaultColor,
+                            color: color,
                             label: `Polygon ${polygons.length + 1}`,
                             NumberCellsContain: cellsInPolygon.length,
                             isVisible: true
@@ -160,7 +157,7 @@ const ScatterChart = ({ defaultColor }: Props) => {
                 }
             });
         });
-    }, [defaultColor, polygons, isSelectingArea]);
+    }, [color, polygons, isSelectingArea]);
 
     const handleColorChange = (index: number, color: string) => {
         const updatedPolygons = [...polygons];
@@ -225,11 +222,22 @@ const ScatterChart = ({ defaultColor }: Props) => {
                     })}
                 </g>
             </svg>
-            <div className="flex flex-col justify-center w-[20%] h-[50%]" id="polygon-controls">
-                <h2 className="font-bold text-[1.25rem] text-center">Arbitrary Polygon Info</h2>
-                <div className="flex flex-col justify-center items-center gap-2 mt-3 mb-6">
+            <div className="flex flex-col w-[20%] h-[50%]" id="polygon-controls">
+                <h2 className="font-bold text-[1.25rem] ">Arbitrary Polygon Info</h2>
+                <div className="flex flex-col justify-center  gap-2 mt-4 mb-6">
                     <div className={`w-[50%] bg-white hover:bg-[#edeef2] font-semibold text-[1rem] text-center border-2 rounded-lg cursor-pointer`} onClick={toggleisAreaSelect}>{isSelectingArea ? "Stop" : "Start"}</div>
-                    <h3 className="text-[0.75rem] text-center">Click the Button for Drawing the Polygon to Select the Area of Cells on the Chart</h3>
+                    <h3 className="text-[0.75rem] ">點擊開始按鈕來在圖表框選多邊形細胞範圍</h3>
+                </div>
+                <div className="flex  items-center gap-2 mb-2">
+                    <label className="text-[0.75rem]" htmlFor="colorPicker">
+                        點選初始多邊形選擇框的顏色
+                    </label>
+                    <input
+                        id="colorPicker"
+                        type="color"
+                        value={color}
+                        onChange={(e) => setColor(e.target.value)}
+                    />
                 </div>
                 <div className="flex-1 flex flex-col gap-4 overflow-y-auto">
                     {polygons.map((polygon, index) => (
@@ -251,14 +259,13 @@ const ScatterChart = ({ defaultColor }: Props) => {
                                     <div className="absolute w-full h-[2px] bg-black -rotate-45 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
                                 </div>
                             </div>
-                            <div className="text-[1rem]">
-                                <p>Cell Counts:  {polygon.NumberCellsContain}</p>
-                            </div>
-                            <div className="text-[1rem]">
-                                <p>Cell Ratio of Total:  {(polygon.NumberCellsContain / totalCells * 100).toFixed(1)}%</p>
-                            </div>
+
+                            <p className="text-[0.75rem]">選取細胞數量:  {polygon.NumberCellsContain}</p>
+
+                            <p className="text-[0.75rem]">選取細胞比例:  {(polygon.NumberCellsContain / totalCells * 100).toFixed(1)}%</p>
+
                             <div className="flex items-center gap-2">
-                                <p className="text-[1rem]">Border Color:  </p>
+                                <p className="text-[0.75rem]">多邊形邊框顏色  </p>
                                 <input
                                     type="color"
                                     value={polygon.color}
@@ -269,13 +276,13 @@ const ScatterChart = ({ defaultColor }: Props) => {
                                 />
                             </div>
                             <div className='flex items-center gap-2'>
-                                <div>Show</div>
+                                <div className="text-[0.75rem]">顯示</div>
                                 <div className={`flex items-center ${polygon.isVisible ? "justify-start" : "justify-end "} bg-[#edeef2] px-[2px] w-8 h-4 rounded-[20px]`}
                                     onClick={() => togglePolygonVisibility(index)}
                                 >
                                     <div className='w-3 h-3 bg-[#8e8e91] rounded-full'></div>
                                 </div>
-                                <div>Hide</div>
+                                <div className="text-[0.75rem]">隱藏</div>
                             </div>
                             {/* <button onClick={() => togglePolygonVisibility(index)}>
                             {polygon.isVisible ? "Hide" : "Show"}
