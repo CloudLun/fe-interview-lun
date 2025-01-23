@@ -50,13 +50,13 @@ const ScatterChart = () => {
 
             const chart = svg.select("#chart").attr("transform", `translate(${margin.left},${margin.top})`);
 
-            chart.selectAll('circle')
+            chart.selectAll("circle")
                 .data(data)
-                .join('circle')
-                .attr("cx", d => xScale(+d['CD45-KrO']))
-                .attr('cy', d => yScale(+d['SS INT LIN']))
-                .attr('r', 3)
-                .attr('fill', '#ececec')
+                .join("circle")
+                .attr("cx", d => xScale(+d["CD45-KrO"]))
+                .attr("cy", d => yScale(+d["SS INT LIN"]))
+                .attr("r", 3)
+                .attr("fill", "#ececec")
 
             chart.append("g")
                 .attr("transform", `translate(0,${innerHeight})`)
@@ -124,7 +124,7 @@ const ScatterChart = () => {
 
                 chart
                     .append("circle")
-                    .attr('id', "clickedCircle")
+                    .attr("id", "clickedCircle")
                     .attr("cx", adjustedX)
                     .attr("cy", adjustedY)
                     .attr("r", 2.5) 
