@@ -254,7 +254,7 @@ const ScatterChart = () => {
 
 
     return (
-        <div className="flex items-start gap-8 w-full h-full">
+        <div className="flex items-start gap-6 w-full h-full">
             <svg
                 ref={svgRef}
                 className="w-[70%] h-[80%]">
