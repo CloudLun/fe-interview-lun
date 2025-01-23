@@ -16,9 +16,11 @@ type Props = {
 const ScatterChart = ({ defaultColor }: Props) => {
     const [polygons, setPolygons] = useState<PolygonData[]>([]);
     const [totalCells, setTotalCells] = useState<number>(0)
+    const [isSelectingArea, setIsSelectingArea] = useState(false)
     const svgRef = useRef<SVGSVGElement>(null);
 
     const margin = { top: 20, right: 20, bottom: 50, left: 50 };
+
 
 
     // const LOCAL_STORAGE_KEY = "scatterChartPolygons";
@@ -113,7 +115,11 @@ const ScatterChart = ({ defaultColor }: Props) => {
                 .attr("stroke", defaultColor)
                 .attr("stroke-width", 2);
 
+
+
             svg.on("click", function (event) {
+                if(!isSelectingArea) return 
+
                 const [x, y] = d3.pointer(event, svgRef.current);
                 const adjustedX = x - margin.left;
                 const adjustedY = y - margin.top;
@@ -154,7 +160,7 @@ const ScatterChart = ({ defaultColor }: Props) => {
                 }
             });
         });
-    }, [defaultColor, polygons]);
+    }, [defaultColor, polygons, isSelectingArea]);
 
     const handleColorChange = (index: number, color: string) => {
         const updatedPolygons = [...polygons];
@@ -179,6 +185,7 @@ const ScatterChart = ({ defaultColor }: Props) => {
         setPolygons(updatedPolygons);
     }
 
+    const toggleisAreaSelect = () => setIsSelectingArea(!isSelectingArea)
 
 
     return (
@@ -218,8 +225,12 @@ const ScatterChart = ({ defaultColor }: Props) => {
                     })}
                 </g>
             </svg>
-            <div className="w-[20%] flex flex-col gap-5 h-[50%]" id="polygon-controls">
+            <div className="flex flex-col justify-center w-[20%] h-[50%]" id="polygon-controls">
                 <h2 className="font-bold text-[1.25rem] text-center">Arbitrary Polygon Info</h2>
+                <div className="flex flex-col justify-center items-center gap-2 mt-3 mb-6">
+                    <div className={`w-[50%] bg-white hover:bg-[#edeef2] font-semibold text-[1rem] text-center border-2 rounded-lg cursor-pointer`} onClick={toggleisAreaSelect}>{isSelectingArea ? "Stop" : "Start"}</div>
+                    <h3 className="text-[0.75rem] text-center">Click the Button for Drawing the Polygon to Select the Area of Cells on the Chart</h3>
+                </div>
                 <div className="flex-1 flex flex-col gap-4 overflow-y-auto">
                     {polygons.map((polygon, index) => (
                         <div key={index} className="px-4 py-2 border-2 rounded-[20px]" id="polygon-control">
@@ -241,7 +252,10 @@ const ScatterChart = ({ defaultColor }: Props) => {
                                 </div>
                             </div>
                             <div className="text-[1rem]">
-                                <p>Cell Ratio of Total:  {(polygon.NumberCellsContain / totalCells * 100).toFixed(1)}% ({polygon.NumberCellsContain})</p>
+                                <p>Cell Counts:  {polygon.NumberCellsContain}</p>
+                            </div>
+                            <div className="text-[1rem]">
+                                <p>Cell Ratio of Total:  {(polygon.NumberCellsContain / totalCells * 100).toFixed(1)}%</p>
                             </div>
                             <div className="flex items-center gap-2">
                                 <p className="text-[1rem]">Border Color:  </p>
