@@ -224,11 +224,11 @@ const ScatterChart = () => {
             </svg>
             <div className="flex flex-col w-[20%] h-[50%]" id="polygon-controls">
                 <h2 className="font-bold text-[1.25rem] ">Arbitrary Polygon Info</h2>
-                <div className="flex flex-col justify-center  gap-2 mt-4 mb-6">
+                <div className="flex flex-col justify-center  gap-2 mt-4 mb-2">
                     <div className={`w-[50%] bg-white hover:bg-[#edeef2] font-semibold text-[1rem] text-center border-2 rounded-lg cursor-pointer`} onClick={toggleisAreaSelect}>{isSelectingArea ? "Stop" : "Start"}</div>
                     <h3 className="text-[0.75rem] ">點擊開始按鈕來在圖表框選多邊形細胞範圍</h3>
                 </div>
-                <div className="flex  items-center gap-2 mb-2">
+                <div className="flex  items-center gap-2 mb-6">
                     <label className="text-[0.75rem]" htmlFor="colorPicker">
                         點選初始多邊形選擇框的顏色
                     </label>
@@ -239,6 +239,7 @@ const ScatterChart = () => {
                         onChange={(e) => setColor(e.target.value)}
                     />
                 </div>
+                <h3 className="text-[0.75rem] mb-2">當您選取完多邊形後，以下會出現範圍內細胞資料</h3>
                 <div className="flex-1 flex flex-col gap-4 overflow-y-auto">
                     {polygons.map((polygon, index) => (
                         <div key={index} className="px-4 py-2 border-2 rounded-[20px]" id="polygon-control">
