@@ -1,5 +1,7 @@
 # Flow Cytometry Data Analysis Tool: 流式細胞儀數據分析的前端應用工具
 
+<img width="1920" alt="Image" src="https://github.com/user-attachments/assets/1ccc33a0-b49c-4835-9b35-5c1ad9740c23" />
+
 ## 簡介
 這是一個用於流式細胞儀（Flow Cytometry）數據分析的前端應用，主要應用於醫學實驗室中的血液細胞分析，目的是協助醫師和研究人員有效識別及分類不同類型的血球。
 
@@ -13,9 +15,6 @@
    - 點選移動多邊形疊加順序
 3. **本地存儲支持**：繪製的多邊形將保存到 `localStorage`，方便用戶刷新頁面後恢復數據。
 4. **導出數據**：導出多邊形範圍細胞數據 csv 檔案
-
-
-<img width="1920" alt="Image" src="https://github.com/user-attachments/assets/1ccc33a0-b49c-4835-9b35-5c1ad9740c23" />
 
 
 ## 安裝步驟
