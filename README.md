@@ -1,5 +1,4 @@
-# Flow Cytometry Data Analysis Tool
-# 流式細胞儀數據分析的前端應用工具
+# Flow Cytometry Data Analysis Tool: 流式細胞儀數據分析的前端應用工具
 
 ## 簡介
 這是一個用於流式細胞儀（Flow Cytometry）數據分析的前端應用，主要應用於醫學實驗室中的血液細胞分析，目的是協助醫師和研究人員有效識別及分類不同類型的血球。
