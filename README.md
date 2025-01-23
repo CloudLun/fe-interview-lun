@@ -31,7 +31,7 @@ yarn install
 ```
 3.啟動開發伺服器：
 ```
-npm install
+npm run dev
 # 或者使用 yarn
-yarn install
+yarn dev
 ```
