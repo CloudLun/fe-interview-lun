@@ -15,4 +15,4 @@
 4. **導出數據**：導出多邊形範圍細胞數據 csv 檔案
 
 
-<img src="/chart-preview.png" alt="示例圖表" width="600" />
+<img src="/screenshot.png" alt="示例圖表" width="600" />
