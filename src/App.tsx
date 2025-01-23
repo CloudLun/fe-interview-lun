@@ -2,8 +2,6 @@ import ScatterChart from "./component/ScatterChart";
 
 function App() {
 
-
-
   return (
     <div
       className="px-8 w-[100vw] h-[100vh]">

@@ -6,15 +6,19 @@ type PolygonData = {
     color: string;
     label: string;
     NumberCellsContain: number;
-    isVisible: boolean
+    isVisible: boolean;
+    dashArray: string; // 新增: 虛線樣式
 };
 
 const ScatterChart = () => {
-    const [polygons, setPolygons] = useState<PolygonData[]>([]);
+    const LOCAL_STORAGE_KEY = "scatterChartPolygons";
+    const savedPolygons = localStorage.getItem(LOCAL_STORAGE_KEY);
+    const [polygons, setPolygons] = useState<PolygonData[]>(savedPolygons!.length > 0 ? JSON.parse(savedPolygons!) : []);
     const [totalCells, setTotalCells] = useState<number>(0)
     const [isSelectingArea, setIsSelectingArea] = useState(false)
     const [polygonColor, setPolygonColor] = useState("#007bff");
-    // const [chartSize, setChartSize] = useState({ width: 0, height: 0 });
+
+
 
     const svgRef = useRef<SVGSVGElement>(null);
 
@@ -22,16 +26,17 @@ const ScatterChart = () => {
 
 
 
-    // const LOCAL_STORAGE_KEY = "scatterChartPolygons";
-    // // 加載保存的多邊形
+    // console.log(localStorage.getItem(LOCAL_STORAGE_KEY))
+
     // useEffect(() => {
-    //     const savedPolygons = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || "[]");
-    //     setPolygons(savedPolygons);
+    //   const savedPolygons = localStorage.getItem(LOCAL_STORAGE_KEY);
+    //   if (savedPolygons) {
+    //     setPolygons(JSON.parse(savedPolygons));
+    //   }
     // }, []);
 
-    // // 保存多邊形到本地存儲
     // useEffect(() => {
-    //     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(polygons));
+    //   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(polygons));
     // }, [polygons]);
 
 
@@ -146,12 +151,13 @@ const ScatterChart = () => {
                             color: polygonColor,
                             label: `Polygon ${polygons.length + 1}`,
                             NumberCellsContain: cellsInPolygon.length,
-                            isVisible: true
+                            isVisible: true,
+                            dashArray: "none"
                         };
 
 
                         setPolygons((prev) => [...prev, newPolygon]);
-
+                        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify([...polygons, newPolygon]));
                         clickedPoints = [];
                         linePath.attr("d", null);
                         return;
@@ -166,6 +172,13 @@ const ScatterChart = () => {
         updatedPolygons[index].color = color;
         setPolygons(updatedPolygons);
     };
+
+    const handleDashArrayChange = (index: number, dash: string) => {
+        const updatedPolygons = [...polygons];
+        updatedPolygons[index].dashArray = dash;
+        setPolygons(updatedPolygons);
+    };
+
 
     const handleLabelChange = (index: number, label: string) => {
         const updatedPolygons = [...polygons];
@@ -208,6 +221,7 @@ const ScatterChart = () => {
                                     fill="none"
                                     stroke={polygon.color}
                                     strokeWidth={2}
+                                    strokeDasharray={polygon.dashArray}
                                 />
                                 <text
                                     x={polygonCentroid[0]}
@@ -265,37 +279,45 @@ const ScatterChart = () => {
                                     <div className="absolute w-full h-[2px] bg-black -rotate-45 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
                                 </div>
                             </div>
+                            <div className="flex flex-col gap-[0.375rem]">
+                                <p className="text-[0.75rem]">選取細胞數量:  {polygon.NumberCellsContain}</p>
 
-                            <p className="text-[0.75rem]">選取細胞數量:  {polygon.NumberCellsContain}</p>
+                                <p className="text-[0.75rem]">選取細胞比例:  {(polygon.NumberCellsContain / totalCells * 100).toFixed(1)}%</p>
 
-                            <p className="text-[0.75rem]">選取細胞比例:  {(polygon.NumberCellsContain / totalCells * 100).toFixed(1)}%</p>
-
-                            <div className="flex items-center gap-2">
-                                <p className="text-[0.75rem]">多邊形邊框顏色  </p>
-                                <input
-                                    type="color"
-                                    value={polygon.color}
-                                    onChange={(e) =>
-                                        handleColorChange(index, e.target.value)
-                                    }
-                                    className="curosr-pointer"
-                                />
-                            </div>
-                            <div className='flex items-center gap-2'>
-                                <div className="text-[0.75rem]">顯示</div>
-                                <div className={`flex items-center ${polygon.isVisible ? "justify-start" : "justify-end "} bg-[#edeef2] px-[2px] w-8 h-4 rounded-[20px]`}
-                                    onClick={() => togglePolygonVisibility(index)}
-                                >
-                                    <div className='w-3 h-3 bg-[#8e8e91] rounded-full'></div>
+                                <div className="flex items-center gap-2">
+                                    <p className="text-[0.75rem]">多邊形邊框顏色  </p>
+                                    <input
+                                        type="color"
+                                        value={polygon.color}
+                                        onChange={(e) =>
+                                            handleColorChange(index, e.target.value)
+                                        }
+                                        className="curosr-pointer"
+                                    />
                                 </div>
-                                <div className="text-[0.75rem]">隱藏</div>
+                                <div className='flex items-center gap-2'>
+                                    <p className="text-[0.75rem]">虛線樣式</p>
+                                    <select
+                                        value={polygon.dashArray}
+                                        onChange={(e) => handleDashArrayChange(index, e.target.value)}
+                                        className="px-2 py-1 text-[0.75rem] border-2 rounded-lg "
+                                    >
+                                        <option value="none">實線</option>
+                                        <option value="5,5">短虛線</option>
+                                        <option value="10,5">長虛線</option>
+                                        <option value="2,2">點線</option>
+                                    </select>
+                                </div>
+                                <div className='flex items-center gap-2'>
+                                    <div className="text-[0.75rem]">顯示</div>
+                                    <div className={`flex items-center ${polygon.isVisible ? "justify-start" : "justify-end "} bg-[#edeef2] px-[2px] w-8 h-4 rounded-[20px]`}
+                                        onClick={() => togglePolygonVisibility(index)}
+                                    >
+                                        <div className='w-3 h-3 bg-[#8e8e91] rounded-full'></div>
+                                    </div>
+                                    <div className="text-[0.75rem]">隱藏</div>
+                                </div>
                             </div>
-                            {/* <button onClick={() => togglePolygonVisibility(index)}>
-                            {polygon.isVisible ? "Hide" : "Show"}
-                        </button>
-                        <button onClick={() => handleDeletePolygon(index)}>
-                            Delete
-                        </button> */}
                         </div>
 
                     ))}
