@@ -1,21 +1,18 @@
-# React + TypeScript + Vite
+# Flow Cytometry Data Analysis Tool: 流式細胞儀數據分析的前端應用工具
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 簡介
+這是一個用於流式細胞儀（Flow Cytometry）數據分析的前端應用，主要應用於醫學實驗室中的血液細胞分析，目的是協助醫師和研究人員有效識別及分類不同類型的血球。
 
-While this project uses React, Vite supports many popular JS frameworks. [See all the supported frameworks](https://vitejs.dev/guide/#scaffolding-your-first-vite-project).
+## 工具特點
+1. **互動式繪圖**：用戶可通過點擊自由繪製多邊形。
+2. **多邊形動態樣式更改**：
+   - 編輯多邊形標籤名稱
+   - 修改多邊形邊框顏色
+   - 選擇虛線樣式（實線、短虛線、長虛線或點線）
+   - 切換顯示或隱藏多邊形模式
+   - 點選移動多邊形疊加順序
+3. **本地存儲支持**：繪製的多邊形將保存到 `localStorage`，方便用戶刷新頁面後恢復數據。
+4. **導出數據**：導出多邊形範圍細胞數據 csv 檔案
 
-## Deploy Your Own
-
-Deploy your own Vite project with Vercel.
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/vercel/tree/main/examples/vite-react&template=vite-react)
-
-_Live Example: https://vite-react-example.vercel.app_
-
-### Deploying From Your Terminal
-
-You can deploy your new Vite project with a single command from your terminal using [Vercel CLI](https://vercel.com/download):
-
-```shell
-$ vercel
-```
+##預覽
+![示例圖表](/chart-preview.png)
