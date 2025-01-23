@@ -1,4 +1,3 @@
-import { useState } from "react";
 import ScatterChart from "./component/ScatterChart";
 
 function App() {
