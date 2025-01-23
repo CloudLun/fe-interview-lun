@@ -122,6 +122,14 @@ const ScatterChart = () => {
                 clickedPoints.push([adjustedX, adjustedY]);
                 linePath.attr("d", lineGenerator(clickedPoints));
 
+                chart
+                    .append("circle")
+                    .attr('id', "clickedCircle")
+                    .attr("cx", adjustedX)
+                    .attr("cy", adjustedY)
+                    .attr("r", 2.5) 
+                    .attr("fill", polygonColor);
+
                 if (clickedPoints.length > 0) {
                     const distance = Math.sqrt(
                         Math.pow(adjustedX - clickedPoints[0][0], 2) +
@@ -151,6 +159,7 @@ const ScatterChart = () => {
                         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify([...polygons, newPolygon]));
                         clickedPoints = [];
                         linePath.attr("d", null);
+                        chart.selectAll("#clickedCircle").remove();
                         return;
                     }
                 }
