@@ -11,9 +11,11 @@ type PolygonData = {
 };
 
 const ScatterChart = () => {
-    // const LOCAL_STORAGE_KEY = "scatterChartPolygons";
-    // const savedPolygons = localStorage.getItem(LOCAL_STORAGE_KEY);savedPolygons!.length > 0 ? JSON.parse(savedPolygons!) : 
-    const [polygons, setPolygons] = useState<PolygonData[]>([]);
+    const LOCAL_STORAGE_KEY = "polygons";
+    const savedPolygons = localStorage.getItem(LOCAL_STORAGE_KEY);
+    const [polygons, setPolygons] = useState<PolygonData[]>(
+        savedPolygons ? JSON.parse(savedPolygons) : []
+    );
     const [totalCells, setTotalCells] = useState<number>(0)
     const [isSelectingArea, setIsSelectingArea] = useState(false)
     const [polygonColor, setPolygonColor] = useState("#007bff");
@@ -24,20 +26,6 @@ const ScatterChart = () => {
 
     const margin = { top: 20, right: 20, bottom: 50, left: 50 };
 
-
-
-    // console.log(localStorage.getItem(LOCAL_STORAGE_KEY))
-
-    // useEffect(() => {
-    //   const savedPolygons = localStorage.getItem(LOCAL_STORAGE_KEY);
-    //   if (savedPolygons) {
-    //     setPolygons(JSON.parse(savedPolygons));
-    //   }
-    // }, []);
-
-    // useEffect(() => {
-    //   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(polygons));
-    // }, [polygons]);
 
 
 
@@ -57,9 +45,6 @@ const ScatterChart = () => {
 
             // d3.select(svgRef.current).selectAll("*").remove();
             const svg = d3.select(svgRef.current)
-
-            
-
 
             const chart = svg.select("#chart").attr("transform", `translate(${margin.left},${margin.top})`);
 
@@ -161,7 +146,7 @@ const ScatterChart = () => {
 
 
                         setPolygons((prev) => [...prev, newPolygon]);
-                        // localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify([...polygons, newPolygon]));
+                        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify([...polygons, newPolygon]));
                         clickedPoints = [];
                         linePath.attr("d", null);
                         return;
@@ -170,6 +155,9 @@ const ScatterChart = () => {
             });
         });
     }, [polygonColor, polygons, isSelectingArea]);
+
+
+    const toggleisAreaSelect = () => setIsSelectingArea(!isSelectingArea)
 
     const handleColorChange = (index: number, color: string) => {
         const updatedPolygons = [...polygons];
@@ -183,7 +171,6 @@ const ScatterChart = () => {
         setPolygons(updatedPolygons);
     };
 
-
     const handleLabelChange = (index: number, label: string) => {
         const updatedPolygons = [...polygons];
         updatedPolygons[index].label = label;
@@ -193,6 +180,7 @@ const ScatterChart = () => {
     const handleDeletePolygon = (index: number) => {
         const updatedPolygons = polygons.filter((_, i) => i !== index);
         setPolygons(updatedPolygons);
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedPolygons));
     };
 
     const togglePolygonVisibility = (index: number) => {
@@ -201,26 +189,26 @@ const ScatterChart = () => {
         setPolygons(updatedPolygons);
     }
 
-    const toggleisAreaSelect = () => setIsSelectingArea(!isSelectingArea)
+
 
     const handleReorderPolygon = (index: number, direction: "up" | "down") => {
         const updatedPolygons = [...polygons];
 
         console.log(updatedPolygons)
-    
+
         // 判斷目標索引是否可移動
         if (direction === "down" && index > 0) {
             // 與上方多邊形交換
-            [updatedPolygons[index], updatedPolygons[index - 1]] = 
+            [updatedPolygons[index], updatedPolygons[index - 1]] =
                 [updatedPolygons[index - 1], updatedPolygons[index]];
         } else if (direction === "up" && index < updatedPolygons.length - 1) {
             // 與下方多邊形交換
-            [updatedPolygons[index], updatedPolygons[index + 1]] = 
+            [updatedPolygons[index], updatedPolygons[index + 1]] =
                 [updatedPolygons[index + 1], updatedPolygons[index]];
         }
-    
+
         setPolygons(updatedPolygons);
-        // localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedPolygons)); // 更新 localStorage
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedPolygons));
     };
 
 
@@ -263,12 +251,12 @@ const ScatterChart = () => {
                 </g>
             </svg>
             <div className="flex flex-col w-[20%] h-[80%] overflow-y-scroll" id="polygon-controls">
-                <h2 className="font-bold text-[1.25rem] ">Arbitrary Polygon Info</h2>
-                <div className="flex flex-col justify-center  gap-2 mt-4 mb-2">
+                <h2 className="font-bold text-[1.25rem] ">Arbitrary Polygon Gating Info</h2>
+                <div className="flex flex-col justify-center  gap-2 mt-4">
                     <div className={`w-[50%] bg-white hover:bg-[#edeef2] font-semibold text-[1rem] text-center border-2 rounded-lg cursor-pointer`} onClick={toggleisAreaSelect}>{isSelectingArea ? "Stop" : "Start"}</div>
                     <h3 className="text-[0.75rem] ">點擊按鈕在圖表框選多邊形細胞範圍</h3>
                 </div>
-                <div className="flex  items-center gap-2 mb-6">
+                <div className="flex  items-center gap-2 my-4">
                     <h3 className="text-[0.75rem]">
                         點選初始多邊形選擇框的顏色
                     </h3>
