@@ -13,7 +13,9 @@ const ScatterChart = () => {
     const [polygons, setPolygons] = useState<PolygonData[]>([]);
     const [totalCells, setTotalCells] = useState<number>(0)
     const [isSelectingArea, setIsSelectingArea] = useState(false)
-    const [color, setColor] = useState("#007bff");
+    const [polygonColor, setPolygonColor] = useState("#007bff");
+    // const [chartSize, setChartSize] = useState({ width: 0, height: 0 });
+
     const svgRef = useRef<SVGSVGElement>(null);
 
     const margin = { top: 20, right: 20, bottom: 50, left: 50 };
@@ -109,7 +111,7 @@ const ScatterChart = () => {
             const linePath = chart
                 .append("path")
                 .attr("fill", "none")
-                .attr("stroke", color)
+                .attr("stroke", polygonColor)
                 .attr("stroke-width", 2);
 
 
@@ -141,7 +143,7 @@ const ScatterChart = () => {
 
                         const newPolygon = {
                             points: [...clickedPoints],
-                            color: color,
+                            color: polygonColor,
                             label: `Polygon ${polygons.length + 1}`,
                             NumberCellsContain: cellsInPolygon.length,
                             isVisible: true
@@ -157,7 +159,7 @@ const ScatterChart = () => {
                 }
             });
         });
-    }, [color, polygons, isSelectingArea]);
+    }, [polygonColor, polygons, isSelectingArea]);
 
     const handleColorChange = (index: number, color: string) => {
         const updatedPolygons = [...polygons];
@@ -186,7 +188,7 @@ const ScatterChart = () => {
 
 
     return (
-        <div className="flex items-center gap-8 w-full h-full">
+        <div className="flex items-start gap-8 w-full h-full">
             <svg
                 ref={svgRef}
                 className="w-[70%] h-[50%]">
@@ -226,32 +228,35 @@ const ScatterChart = () => {
                 <h2 className="font-bold text-[1.25rem] ">Arbitrary Polygon Info</h2>
                 <div className="flex flex-col justify-center  gap-2 mt-4 mb-2">
                     <div className={`w-[50%] bg-white hover:bg-[#edeef2] font-semibold text-[1rem] text-center border-2 rounded-lg cursor-pointer`} onClick={toggleisAreaSelect}>{isSelectingArea ? "Stop" : "Start"}</div>
-                    <h3 className="text-[0.75rem] ">點擊開始按鈕來在圖表框選多邊形細胞範圍</h3>
+                    <h3 className="text-[0.75rem] ">點擊按鈕在圖表框選多邊形細胞範圍</h3>
                 </div>
                 <div className="flex  items-center gap-2 mb-6">
-                    <label className="text-[0.75rem]" htmlFor="colorPicker">
+                    <h3 className="text-[0.75rem]">
                         點選初始多邊形選擇框的顏色
-                    </label>
+                    </h3>
                     <input
                         id="colorPicker"
                         type="color"
-                        value={color}
-                        onChange={(e) => setColor(e.target.value)}
+                        value={polygonColor}
+                        onChange={(e) => setPolygonColor(e.target.value)}
                     />
                 </div>
-                <h3 className="text-[0.75rem] mb-2">當您選取完多邊形後，以下會出現範圍內細胞資料</h3>
+                <h3 className="text-[0.75rem] mb-2">選取完多邊形後，以下會出現範圍內細胞資料</h3>
                 <div className="flex-1 flex flex-col gap-4 overflow-y-auto">
                     {polygons.map((polygon, index) => (
                         <div key={index} className="px-4 py-2 border-2 rounded-[20px]" id="polygon-control">
-                            <div className="flex justify-between items-center mb-2">
-                                <input
-                                    type="text"
-                                    value={polygon.label}
-                                    onChange={(e) =>
-                                        handleLabelChange(index, e.target.value)
-                                    }
-                                    className="font-semibold text-[1.25rem]"
-                                />
+                            <div className="flex justify-between items-center mb-3">
+                                <div>
+                                    <input
+                                        type="text"
+                                        value={polygon.label}
+                                        onChange={(e) =>
+                                            handleLabelChange(index, e.target.value)
+                                        }
+                                        className="font-semibold text-[1.25rem]"
+                                    />
+                                    <h3 className="text-[0.5rem] text-gray-600">點擊文字框編輯標籤</h3>
+                                </div>
                                 <div
                                     className="relative w-4 h-4 cursor-pointer"
                                     onClick={() => handleDeletePolygon(index)}
