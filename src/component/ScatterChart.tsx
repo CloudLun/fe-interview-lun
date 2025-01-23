@@ -32,8 +32,8 @@ const ScatterChart = () => {
     const svgRef = useRef<SVGSVGElement>(null);
 
     const margin = { top: 20, right: 20, bottom: 50, left: 50 };
-    const width = window.innerWidth * 0.7
-    const height = window.innerHeight * 0.56
+    const width = window.innerWidth * 0.63
+    const height = window.innerHeight * 0.64
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
