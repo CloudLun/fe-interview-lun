@@ -34,3 +34,4 @@ npm run dev
 # 或者使用 yarn
 yarn dev
 ```
+4. 瀏覽器訪問 localhost 網址，即可查看應用
