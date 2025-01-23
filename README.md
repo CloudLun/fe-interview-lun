@@ -15,7 +15,6 @@
 4. **導出數據**：導出多邊形範圍細胞數據 csv 檔案
 
 
-##預覽
 <img width="1920" alt="Image" src="https://github.com/user-attachments/assets/1ccc33a0-b49c-4835-9b35-5c1ad9740c23" />
 
 ##安裝步驟
