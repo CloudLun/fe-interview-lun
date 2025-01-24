@@ -72,4 +72,4 @@ public/
 - **React + TypeScript**
 - **D3.js**
 - **Tailwind CSS**
-- **Vite**[
+- **Vite**
