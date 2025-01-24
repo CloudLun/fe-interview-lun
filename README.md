@@ -73,4 +73,3 @@ public/
 - **D3.js**
 - **Tailwind CSS**
 - **Vite**[
-- **localStorage**
