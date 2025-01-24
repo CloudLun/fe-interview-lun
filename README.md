@@ -22,7 +22,7 @@
 ```bash
 git clone <https://github.com/CloudLun/fe-interview-lun.git>
 ```
-2.安裝所有依賴：
+2.安裝所有套件：
 ```
 npm install
 # 或者使用 yarn
