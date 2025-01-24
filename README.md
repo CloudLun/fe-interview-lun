@@ -73,3 +73,6 @@ public/
 - **D3.js**
 - **Tailwind CSS**
 - **Vite**
+
+## 聯繫方式
+- Email: cloud830902@gmail.com
