@@ -35,3 +35,42 @@ npm run dev
 yarn dev
 ```
 4. 瀏覽器訪問 localhost 網址，即可查看應用
+
+## 文件結構
+```
+plaintext
+src/
+├── component/
+│   └── ScatterChart.tsx # 多邊形圖表組件
+│   └── polygonInfoSection   # 多邊形圖表樣式組件
+│        └── ExportPolygon.tsx
+│        └── PolygonBorderColor.tsx
+│        └── PolygonLabel.tsx
+│        └── PolygoReorder.tsx
+│        └── PolygonVisbility.tsx
+│
+├── app.tsx         # React 根組件
+├── main.tsx         # React 應用入口
+├── vite.config.ts   # Vite 配置文件
+└── index.html   # HTML 應用入口
+
+public/
+├── data/
+│   └── CD45_pos_public.csv  # 細胞數據
+```
+## 使用方法
+### 繪製多邊形
+1. 點擊 `Start` 按鈕進入多邊形繪製模式。
+2. 在圖表上點擊來繪製多邊形的頂點。
+3. 最後頂點為起點來閉合多邊形完成繪圖。
+4. 多邊形繪製完成後，右側控制面板中查看範圍內的細胞數據。
+
+### 導出數據
+- 點擊「導出數據」按鈕來輸出多邊形範圍內的細胞資料
+
+##### 技術棧
+- **React + TypeScript**
+- **D3.js**
+- **Tailwind CSS**
+- **Vite**[
+- **localStorage**
