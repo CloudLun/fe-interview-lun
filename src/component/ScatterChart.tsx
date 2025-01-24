@@ -50,13 +50,17 @@ const ScatterChart = () => {
 
             const chart = svg.select("#chart").attr("transform", `translate(${margin.left},${margin.top})`);
 
-            chart.selectAll("circle")
-                .data(data)
-                .join("circle")
-                .attr("cx", d => xScale(+d["CD45-KrO"]))
-                .attr("cy", d => yScale(+d["SS INT LIN"]))
-                .attr("r", 3)
+            const pointsPath = data.map(d => {
+                const x = xScale(+d["CD45-KrO"]);
+                const y = yScale(+d["SS INT LIN"]);
+                const r = 2;
+                return `M${x},${y} m-${r},0 a${r},${r} 0 1,0 ${r * 2},0 a${r},${r} 0 1,0 -${r * 2},0`;
+            }).join(" ");
+            
+            chart.append("path")
+                .attr("d", pointsPath)
                 .attr("fill", "#ececec")
+                .attr("stroke", "none");
 
             chart.append("g")
                 .attr("transform", `translate(0,${innerHeight})`)
