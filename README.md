@@ -38,7 +38,6 @@ yarn dev
 
 ## 文件結構
 ```
-plaintext
 src/
 ├── component/
 │   └── ScatterChart.tsx # 多邊形圖表組件
